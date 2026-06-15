@@ -21,11 +21,11 @@
 
   <style>
     :root {
-      --serendib-blue-dark: #0A2540;
-      --serendib-blue-primary: #0F3D7C;
-      --serendib-blue-light: #EBF1FA;
-      --serendib-teal: #0EA5E9;
-      --serendib-teal-hover: #0284C7;
+      --serendib-blue-dark: #123C24;
+      --serendib-blue-primary: #1B5E34;
+      --serendib-blue-light: #EEF8F1;
+      --serendib-teal: #43BC64;
+      --serendib-teal-hover: #359D51;
       --serendib-gray-bg: #F8FAFC;
       --serendib-gray-border: #E2E8F0;
       --serendib-text-dark: #1E293B;
@@ -619,10 +619,18 @@
   <!-- Mobile Header -->
   <header id="mobile-header">
     <div class="logo-container">
-      <svg class="logo-svg" style="width: 32px; height: 32px;" viewBox="0 0 24 24">
-        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+      <svg viewBox="0 0 160 40" style="width: 120px; height: auto;" class="me-2">
+        <!-- Leaves -->
+        <g fill="#43BC64">
+          <path d="M26,22 C20,21 17,16 18,13 C19,10 23,11 26,22 Z" />
+          <path d="M18,13 C21,15 24,18 26,22" stroke="#123C24" stroke-width="0.8" fill="none" stroke-linecap="round" />
+          <path d="M27,22 C28,12 34,10 36,13 C38,16 33,21 27,22 Z" />
+          <path d="M36,13 C33,15 30,18 27,22" stroke="#123C24" stroke-width="0.8" fill="none" stroke-linecap="round" />
+        </g>
+        <!-- Text -->
+        <text x="44" y="22" font-family="'Montserrat', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF">Serendib</text>
+        <text x="44" y="30" font-family="'Inter', sans-serif" font-weight="700" font-size="5" fill="#43BC64" letter-spacing="1">GROUP OF COMPANIES</text>
       </svg>
-      <span class="h6 mb-0 text-white font-monospace">SERENDIB</span>
     </div>
     <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobile-sidebar" aria-controls="mobile-sidebar">
       <i class="bi bi-list fs-4"></i>
@@ -634,13 +642,18 @@
     <!-- Desktop Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-header">
-        <svg class="logo-svg" viewBox="0 0 24 24">
-          <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+        <svg viewBox="0 0 160 40" style="width: 160px; height: auto;">
+          <!-- Leaves -->
+          <g fill="#43BC64">
+            <path d="M26,22 C20,21 17,16 18,13 C19,10 23,11 26,22 Z" />
+            <path d="M18,13 C21,15 24,18 26,22" stroke="#123C24" stroke-width="0.8" fill="none" stroke-linecap="round" />
+            <path d="M27,22 C28,12 34,10 36,13 C38,16 33,21 27,22 Z" />
+            <path d="M36,13 C33,15 30,18 27,22" stroke="#123C24" stroke-width="0.8" fill="none" stroke-linecap="round" />
+          </g>
+          <!-- Text -->
+          <text x="44" y="22" font-family="'Montserrat', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF">Serendib</text>
+          <text x="44" y="30" font-family="'Inter', sans-serif" font-weight="700" font-size="5" fill="#43BC64" letter-spacing="1">GROUP OF COMPANIES</text>
         </svg>
-        <div>
-          <span class="d-block h5 text-white mb-0 font-monospace" style="letter-spacing: 2px;">SERENDIB</span>
-          <small class="text-white-50" style="font-size: 0.65rem;">PERFORMANCE REVIEW</small>
-        </div>
       </div>
       
       <nav id="sidebar-menu" class="nav-list">
@@ -671,10 +684,18 @@
     <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="mobile-sidebar" aria-labelledby="mobile-sidebar-label" style="width: var(--sidebar-width);">
       <div class="offcanvas-header border-bottom border-secondary">
         <h5 class="offcanvas-title text-white logo-container" id="mobile-sidebar-label">
-          <svg class="logo-svg" viewBox="0 0 24 24">
-            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+          <svg viewBox="0 0 160 40" style="width: 140px; height: auto;">
+            <!-- Leaves -->
+            <g fill="#43BC64">
+              <path d="M26,22 C20,21 17,16 18,13 C19,10 23,11 26,22 Z" />
+              <path d="M18,13 C21,15 24,18 26,22" stroke="#123C24" stroke-width="0.8" fill="none" stroke-linecap="round" />
+              <path d="M27,22 C28,12 34,10 36,13 C38,16 33,21 27,22 Z" />
+              <path d="M36,13 C33,15 30,18 27,22" stroke="#123C24" stroke-width="0.8" fill="none" stroke-linecap="round" />
+            </g>
+            <!-- Text -->
+            <text x="44" y="22" font-family="'Montserrat', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF">Serendib</text>
+            <text x="44" y="30" font-family="'Inter', sans-serif" font-weight="700" font-size="5" fill="#43BC64" letter-spacing="1">GROUP OF COMPANIES</text>
           </svg>
-          <span class="font-monospace">SERENDIB</span>
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
@@ -707,13 +728,29 @@
       <div class="corporate-banner">
         <div class="row align-items-center">
           <div class="col-md-8">
-            <div class="d-flex align-items-center gap-3 mb-2">
-              <svg class="logo-svg" style="width: 56px; height: 56px;" viewBox="0 0 24 24">
-                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
-              </svg>
+            <div class="d-flex flex-column flex-sm-row align-items-center gap-4 text-center text-sm-start">
+              <!-- White card holding the logo in its original colors -->
+              <div class="bg-white p-3 rounded-4 shadow-sm d-inline-block">
+                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width: 140px; height: auto; display: block;">
+                  <!-- Leaves -->
+                  <g fill="#43BC64">
+                    <!-- Left Leaf -->
+                    <path d="M192,130 C154,124 135,93 140,73 C145,53 173,61 192,130 Z" />
+                    <path d="M140,73 C158,89 176,108 192,130" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                    
+                    <!-- Right Leaf -->
+                    <path d="M198,130 C204,65 244,55 255,75 C266,95 236,124 198,130 Z" />
+                    <path d="M255,75 C237,92 217,110 198,130" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                  </g>
+                  <!-- Text Serendib -->
+                  <text x="200" y="210" font-family="'Montserrat', 'Inter', sans-serif" font-weight="700" font-size="52" fill="#333333" text-anchor="middle" letter-spacing="-1">Serendib</text>
+                  <!-- Subtext GROUP OF COMPANIES -->
+                  <text x="200" y="250" font-family="'Inter', sans-serif" font-weight="800" font-size="14" fill="#43BC64" text-anchor="middle" letter-spacing="4">GROUP OF COMPANIES</text>
+                </svg>
+              </div>
               <div>
-                <h1 class="display-6 text-white mb-0" style="font-weight: 800; letter-spacing: -1px;">Serendib</h1>
-                <p class="text-white-50 mb-0 font-monospace" style="letter-spacing: 2px; font-size: 0.85rem;">One-to-One Performance Review System</p>
+                <h1 class="display-6 text-white mb-1" style="font-weight: 800; letter-spacing: -1px;">Performance Review</h1>
+                <p class="text-white-50 mb-0 font-monospace" style="letter-spacing: 2px; font-size: 0.85rem;">One-to-One Performance Evaluation System</p>
               </div>
             </div>
           </div>
