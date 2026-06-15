@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serendib One-to-One Performance Review System</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --serendib-blue-dark: #0A2540;
+      --serendib-blue-primary: #0F3D7C;
+      --serendib-blue-light: #EBF1FA;
+      --serendib-teal: #0EA5E9;
+      --serendib-teal-hover: #0284C7;
+      --serendib-gray-bg: #F8FAFC;
+      --serendib-gray-border: #E2E8F0;
+      --serendib-text-dark: #1E293B;
+      --serendib-text-muted: #64748B;
+      --sidebar-width: 280px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--serendib-gray-bg);
+      color: var(--serendib-text-dark);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: var(--serendib-blue-dark);
+    }
+
+    /* Layout Skeleton */
+    #layout-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--serendib-blue-dark);
+      color: #FFFFFF;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    #sidebar .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #sidebar .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    #sidebar .nav-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    #sidebar .nav-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    #sidebar .nav-item a {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border-left: 4px solid transparent;
+    }
+
+    #sidebar .nav-item a:hover {
+      color: #FFFFFF;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-left-color: var(--serendib-teal);
+    }
+
+    #sidebar .nav-item a.active {
+      color: #FFFFFF;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-left-color: var(--serendib-teal);
+      font-weight: 600;
+    }
+
+    #sidebar .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+    }
+
+    /* Main Content Area */
+    #main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    /* Sticky Mobile Header */
+    #mobile-header {
+      display: none;
+      background-color: var(--serendib-blue-dark);
+      color: #FFFFFF;
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 101;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Corporate Banner */
+    .corporate-banner {
+      background: linear-gradient(135deg, var(--serendib-blue-dark) 0%, var(--serendib-blue-primary) 100%);
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15, 61, 124, 0.15);
+    }
+
+    .corporate-banner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-svg {
+      width: 48px;
+      height: 48px;
+      fill: #FFFFFF;
+    }
+
+    /* Collapsible Cards */
+    .card-custom {
+      background-color: #FFFFFF;
+      border: 1px solid var(--serendib-gray-border);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+      margin-bottom: 2rem;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .card-custom:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-custom-header {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid var(--serendib-gray-border);
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .card-custom-header:hover {
+      background-color: var(--serendib-blue-light);
+    }
+
+    .card-custom-header h3 {
+      font-size: 1.15rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-custom-header .toggle-icon {
+      font-size: 1.25rem;
+      color: var(--serendib-blue-primary);
+      transition: transform 0.2s ease;
+    }
+
+    .card-custom-header:not(.collapsed) .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .card-custom-body {
+      padding: 1.5rem;
+    }
+
+    /* Form Fields Styling */
+    .form-label {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--serendib-blue-dark);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control, .form-select {
+      border: 1.5px solid var(--serendib-gray-border);
+      border-radius: 8px;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.95rem;
+      color: var(--serendib-text-dark);
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--serendib-teal);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+      outline: none;
+    }
+
+    .form-control-plaintext {
+      padding: 0.625rem 0.875rem;
+      font-weight: 500;
+    }
+
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Tables */
+    .table-custom {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--serendib-gray-border);
+    }
+
+    .table-custom th {
+      background-color: var(--serendib-blue-primary);
+      color: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 1rem;
+      border: none;
+    }
+
+    .table-custom td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--serendib-gray-border);
+      background-color: #FFFFFF;
+    }
+
+    .table-custom tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-custom tbody tr:nth-child(even) td {
+      background-color: var(--serendib-gray-bg);
+    }
+
+    /* Competency Review visual displays */
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      font-size: 1.25rem;
+      font-weight: 800;
+      border-radius: 50px;
+      min-width: 80px;
+      color: #FFFFFF;
+      background-color: var(--serendib-text-muted);
+      transition: background-color 0.3s ease;
+    }
+
+    .score-badge.outstanding {
+      background-color: #10B981;
+    }
+    .score-badge.exceeds {
+      background-color: #0EA5E9;
+    }
+    .score-badge.meets {
+      background-color: #F59E0B;
+    }
+    .score-badge.needs-imp {
+      background-color: #EF4444;
+    }
+
+    .gauge-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--serendib-gray-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      background-color: var(--serendib-gray-bg);
+      text-align: center;
+    }
+
+    .gauge-bar-outer {
+      width: 100%;
+      height: 12px;
+      background-color: #E2E8F0;
+      border-radius: 6px;
+      margin-top: 1rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gauge-bar-inner {
+      height: 100%;
+      width: 0%;
+      background-color: var(--serendib-teal);
+      border-radius: 6px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease;
+    }
+
+    /* Custom Radio Option Card Styling */
+    .btn-check:checked + .btn-outline-custom {
+      background-color: var(--serendib-blue-light);
+      border-color: var(--serendib-blue-primary);
+      color: var(--serendib-blue-primary);
+      box-shadow: 0 4px 12px rgba(15, 61, 124, 0.1);
+    }
+
+    .btn-outline-custom {
+      border: 1.5px solid var(--serendib-gray-border);
+      color: var(--serendib-text-muted);
+      border-radius: 8px;
+      font-weight: 600;
+      padding: 0.625rem 1rem;
+      background-color: #FFFFFF;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn-outline-custom:hover {
+      border-color: var(--serendib-blue-primary);
+      color: var(--serendib-blue-primary);
+      background-color: var(--serendib-gray-bg);
+    }
+
+    /* Quick Float Action Panel */
+    #action-panel {
+      position: sticky;
+      bottom: 2rem;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--serendib-gray-border);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      z-index: 99;
+      margin-top: 2rem;
+    }
+
+    /* Variance badge styling */
+    .variance-text {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .variance-pos {
+      color: #10B981;
+    }
+    .variance-neg {
+      color: #EF4444;
+    }
+    .variance-zero {
+      color: #64748B;
+    }
+
+    /* Signatures Section */
+    .signature-box {
+      border-top: 1.5px solid var(--serendib-text-dark);
+      margin-top: 3rem;
+      padding-top: 0.5rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    /* Collapsible items layout hints */
+    .card-custom-header .badge-collapsed {
+      font-size: 0.75rem;
+      font-weight: 600;
+      background-color: var(--serendib-blue-light);
+      color: var(--serendib-blue-primary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      margin-right: 0.75rem;
+      display: none;
+    }
+
+    .card-custom-header.collapsed .badge-collapsed {
+      display: inline-block;
+    }
+
+    /* Toast Container for Save status */
+    #save-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 1050;
+      background: var(--serendib-blue-dark);
+      color: #FFFFFF;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transform: translateY(150%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #save-toast.show {
+      transform: translateY(0);
+    }
+
+    /* Print and PDF Export Styles */
+    @media print {
+      body {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      #sidebar, #mobile-header, #action-panel, .card-custom-header .toggle-icon, .btn-remove-row, .btn-add-row, .btn-utility {
+        display: none !important;
+      }
+      #main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+      .card-custom {
+        border: none !important;
+        box-shadow: none !important;
+        margin-bottom: 2rem !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .card-custom-header {
+        border-bottom: 2px solid var(--serendib-blue-dark) !important;
+        background-color: transparent !important;
+        padding: 0.5rem 0 !important;
+      }
+      .card-custom-header h3 {
+        color: var(--serendib-blue-dark) !important;
+        font-size: 1.25rem !important;
+      }
+      .collapse {
+        display: block !important;
+        height: auto !important;
+        visibility: visible !important;
+      }
+      .form-control, .form-select {
+        border: none !important;
+        border-bottom: 1px solid #000000 !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        background-color: transparent !important;
+        color: #000000 !important;
+      }
+      textarea.form-control {
+        border: 1px solid #CCCCCC !important;
+        border-radius: 4px !important;
+        min-height: 80px !important;
+        height: auto !important;
+      }
+      .table-custom th {
+        background-color: #EEEEEE !important;
+        color: #000000 !important;
+        border-bottom: 1.5px solid #000000 !important;
+      }
+      .table-custom td {
+        background-color: transparent !important;
+        border-bottom: 1px solid #DDDDDD !important;
+      }
+      .corporate-banner {
+        border: 2px solid var(--serendib-blue-dark) !important;
+        background: transparent !important;
+        color: var(--serendib-blue-dark) !important;
+        box-shadow: none !important;
+        padding: 1.5rem !important;
+      }
+      .corporate-banner h1, .corporate-banner p {
+        color: var(--serendib-blue-dark) !important;
+      }
+      .logo-svg {
+        fill: var(--serendib-blue-dark) !important;
+      }
+      .signature-row {
+        margin-top: 4rem !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .page-break {
+        page-break-before: always;
+        break-before: page;
+      }
+    }
+
+    /* Special CSS helper when exporting to PDF via js */
+    body.pdf-exporting {
+      background-color: #FFFFFF !important;
+    }
+    body.pdf-exporting #sidebar,
+    body.pdf-exporting #mobile-header,
+    body.pdf-exporting #action-panel,
+    body.pdf-exporting .card-custom-header .toggle-icon,
+    body.pdf-exporting .btn-remove-row,
+    body.pdf-exporting .btn-add-row,
+    body.pdf-exporting .btn-utility {
+      display: none !important;
+    }
+    body.pdf-exporting #main-content {
+      margin-left: 0 !important;
+      padding: 0.5in !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    body.pdf-exporting .card-custom {
+      border: 1px solid #E2E8F0 !important;
+      box-shadow: none !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    body.pdf-exporting .collapse {
+      display: block !important;
+      height: auto !important;
+      visibility: visible !important;
+    }
+    body.pdf-exporting textarea.form-control {
+      height: auto !important;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 991.98px) {
+      #sidebar {
+        left: calc(-1 * var(--sidebar-width));
+      }
+      #sidebar.active {
+        left: 0;
+      }
+      #main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+      }
+      #mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #action-panel {
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#sidebar-menu" data-bs-offset="50">
+
+  <!-- Mobile Header -->
+  <header id="mobile-header">
+    <div class="logo-container">
+      <svg class="logo-svg" style="width: 32px; height: 32px;" viewBox="0 0 24 24">
+        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+      </svg>
+      <span class="h6 mb-0 text-white font-monospace">SERENDIB</span>
+    </div>
+    <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobile-sidebar" aria-controls="mobile-sidebar">
+      <i class="bi bi-list fs-4"></i>
+    </button>
+  </header>
+
+  <div id="layout-container">
+    
+    <!-- Desktop Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo-svg" viewBox="0 0 24 24">
+          <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+        </svg>
+        <div>
+          <span class="d-block h5 text-white mb-0 font-monospace" style="letter-spacing: 2px;">SERENDIB</span>
+          <small class="text-white-50" style="font-size: 0.65rem;">PERFORMANCE REVIEW</small>
+        </div>
+      </div>
+      
+      <nav id="sidebar-menu" class="nav-list">
+        <li class="nav-item"><a class="nav-link active" href="#sec-employee-info"><i class="bi bi-person-fill me-2"></i> Employee Info</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-prev-commitments"><i class="bi bi-clock-history me-2"></i> Prev Commitments</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-perf-dashboard"><i class="bi bi-speedometer2 me-2"></i> Perf Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-key-achievements"><i class="bi bi-trophy-fill me-2"></i> Key Achievements</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-challenges"><i class="bi bi-exclamation-triangle-fill me-2"></i> Challenges</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-competency"><i class="bi bi-star-fill me-2"></i> Competency Review</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-sales-activity"><i class="bi bi-graph-up-arrow me-2"></i> Sales Activities</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-training"><i class="bi bi-mortarboard-fill me-2"></i> Training Needs</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-employee-feedback"><i class="bi bi-chat-left-text-fill me-2"></i> Employee Feedback</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-manager-feedback"><i class="bi bi-chat-right-quote-fill me-2"></i> Manager Feedback</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-career-development"><i class="bi bi-compass-fill me-2"></i> Career Development</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-next-commitments"><i class="bi bi-calendar-event-fill me-2"></i> Next Commitments</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-accountability"><i class="bi bi-shield-check me-2"></i> Accountability</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-mgmt-decision"><i class="bi bi-folder-check me-2"></i> Mgmt Decision</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-action-plan"><i class="bi bi-list-task me-2"></i> Agreed Action Plan</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sec-signatures"><i class="bi bi-pencil-fill me-2"></i> Signatures</a></li>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <span>&copy; 2026 Serendib Holdings</span>
+      </div>
+    </aside>
+
+    <!-- Mobile Navigation Drawer (Offcanvas) -->
+    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="mobile-sidebar" aria-labelledby="mobile-sidebar-label" style="width: var(--sidebar-width);">
+      <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title text-white logo-container" id="mobile-sidebar-label">
+          <svg class="logo-svg" viewBox="0 0 24 24">
+            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+          </svg>
+          <span class="font-monospace">SERENDIB</span>
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <nav class="nav-list">
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-employee-info"><i class="bi bi-person-fill me-2"></i> Employee Info</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-prev-commitments"><i class="bi bi-clock-history me-2"></i> Prev Commitments</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-perf-dashboard"><i class="bi bi-speedometer2 me-2"></i> Perf Dashboard</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-key-achievements"><i class="bi bi-trophy-fill me-2"></i> Key Achievements</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-challenges"><i class="bi bi-exclamation-triangle-fill me-2"></i> Challenges</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-competency"><i class="bi bi-star-fill me-2"></i> Competency Review</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-sales-activity"><i class="bi bi-graph-up-arrow me-2"></i> Sales Activities</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-training"><i class="bi bi-mortarboard-fill me-2"></i> Training Needs</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-employee-feedback"><i class="bi bi-chat-left-text-fill me-2"></i> Employee Feedback</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-manager-feedback"><i class="bi bi-chat-right-quote-fill me-2"></i> Manager Feedback</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-career-development"><i class="bi bi-compass-fill me-2"></i> Career Development</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-next-commitments"><i class="bi bi-calendar-event-fill me-2"></i> Next Commitments</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-accountability"><i class="bi bi-shield-check me-2"></i> Accountability</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-mgmt-decision"><i class="bi bi-folder-check me-2"></i> Mgmt Decision</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-action-plan"><i class="bi bi-list-task me-2"></i> Agreed Action Plan</a></li>
+          <li class="nav-item" data-bs-dismiss="offcanvas"><a class="nav-link" href="#sec-signatures"><i class="bi bi-pencil-fill me-2"></i> Signatures</a></li>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      
+      <!-- Corporate Header Banner -->
+      <div class="corporate-banner">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <svg class="logo-svg" style="width: 56px; height: 56px;" viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.6 19.5,15.1 18.7,16.4L17.3,15C17.7,14.1 18,13.1 18,12A6,6 0 0,0 12,6C10.9,6 9.9,6.3 9,6.7L7.6,5.3C8.9,4.5 10.4,4 12,4M12,8A4,4 0 0,1 16,12C16,12.7 15.8,13.4 15.4,14L10,8.6C10.6,8.2 11.3,8 12,8M8,10L13.4,15.4C12.8,15.8 12.1,16 11.4,16A4,4 0 0,1 7.4,12C7.4,11.3 7.6,10.6 8,10Z" />
+              </svg>
+              <div>
+                <h1 class="display-6 text-white mb-0" style="font-weight: 800; letter-spacing: -1px;">Serendib</h1>
+                <p class="text-white-50 mb-0 font-monospace" style="letter-spacing: 2px; font-size: 0.85rem;">One-to-One Performance Review System</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <button type="button" class="btn btn-outline-light btn-utility me-2" onclick="toggleAllCards(true)">
+              <i class="bi bi-arrows-angle-expand me-1"></i> Expand All
+            </button>
+            <button type="button" class="btn btn-outline-light btn-utility" onclick="toggleAllCards(false)">
+              <i class="bi bi-arrows-angle-contract me-1"></i> Collapse All
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Form Container -->
+      <form id="review-form" class="needs-validation" novalidate>
+        <div id="review-form-container">
+          
+          <!-- Section 1: Employee Information -->
+          <section id="sec-employee-info" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-employee-info">
+              <h3><i class="bi bi-person-circle text-primary"></i> 1. Employee Information</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-employee-info" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3">
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-name" class="form-label">Employee Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-name" required placeholder="Enter full name">
+                    <div class="invalid-feedback">Employee Name is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-id" class="form-label">Employee ID <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-id" required placeholder="e.g., EMP10042">
+                    <div class="invalid-feedback">Employee ID is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-designation" class="form-label">Designation <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-designation" required placeholder="e.g., Sales Manager">
+                    <div class="invalid-feedback">Designation is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-department" class="form-label">Department <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-department" required placeholder="e.g., Corporate Sales">
+                    <div class="invalid-feedback">Department is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-region" class="form-label">Sector/Region <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-region" required placeholder="e.g., Western Province">
+                    <div class="invalid-feedback">Sector/Region is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-manager" class="form-label">Reporting Manager <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-manager" required placeholder="Enter manager name">
+                    <div class="invalid-feedback">Reporting Manager is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-meeting-date" class="form-label">Date of Meeting <span class="text-danger">*</span></label>
+                    <input type="date" class="form-value form-control" id="emp-meeting-date" required>
+                    <div class="invalid-feedback">Date of Meeting is required.</div>
+                  </div>
+                  <div class="col-md-6 col-lg-3">
+                    <label for="emp-review-period" class="form-label">Review Period <span class="text-danger">*</span></label>
+                    <input type="text" class="form-value form-control" id="emp-review-period" required placeholder="e.g., Q1 2026 or May 2026">
+                    <div class="invalid-feedback">Review Period is required.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 2: Previous Commitment Review -->
+          <section id="sec-prev-commitments" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-prev-commitments">
+              <h3><i class="bi bi-clock-history text-primary"></i> 2. Previous Commitment Review</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-prev-commitments" class="collapse show">
+              <div class="card-custom-body">
+                <div class="table-responsive mb-4">
+                  <table class="table table-custom">
+                    <thead>
+                      <tr>
+                        <th style="width: 25%">Item</th>
+                        <th style="width: 20%">Commitment</th>
+                        <th style="width: 20%">Achievement</th>
+                        <th style="width: 15%">Variance</th>
+                        <th style="width: 20%">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody id="prev-commitments-table">
+                      <!-- Sales Target Row -->
+                      <tr data-kpi="sales">
+                        <td class="fw-semibold">Sales Target</td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-commit" id="prev-sales-commit" placeholder="Enter target"></td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-achieve" id="prev-sales-achieve" placeholder="Enter achievement"></td>
+                        <td class="text-center"><span class="variance-text variance-zero" id="prev-sales-variance">0</span></td>
+                        <td><input type="text" class="form-value form-control" id="prev-sales-remarks" placeholder="Enter remarks"></td>
+                      </tr>
+                      <!-- Recruitment Target Row -->
+                      <tr data-kpi="recruit">
+                        <td class="fw-semibold">Recruitment Target</td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-commit" id="prev-recruit-commit" placeholder="Enter target"></td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-achieve" id="prev-recruit-achieve" placeholder="Enter achievement"></td>
+                        <td class="text-center"><span class="variance-text variance-zero" id="prev-recruit-variance">0</span></td>
+                        <td><input type="text" class="form-value form-control" id="prev-recruit-remarks" placeholder="Enter remarks"></td>
+                      </tr>
+                      <!-- Collection Target Row -->
+                      <tr data-kpi="collection">
+                        <td class="fw-semibold">Collection Target</td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-commit" id="prev-collection-commit" placeholder="Enter target"></td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-achieve" id="prev-collection-achieve" placeholder="Enter achievement"></td>
+                        <td class="text-center"><span class="variance-text variance-zero" id="prev-collection-variance">0</span></td>
+                        <td><input type="text" class="form-value form-control" id="prev-collection-remarks" placeholder="Enter remarks"></td>
+                      </tr>
+                      <!-- Customer Visits Row -->
+                      <tr data-kpi="visits">
+                        <td class="fw-semibold">Customer Visits</td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-commit" id="prev-visits-commit" placeholder="Enter target"></td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-achieve" id="prev-visits-achieve" placeholder="Enter achievement"></td>
+                        <td class="text-center"><span class="variance-text variance-zero" id="prev-visits-variance">0</span></td>
+                        <td><input type="text" class="form-value form-control" id="prev-visits-remarks" placeholder="Enter remarks"></td>
+                      </tr>
+                      <!-- Other KPIs Row -->
+                      <tr data-kpi="other">
+                        <td class="fw-semibold">Other KPIs</td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-commit" id="prev-other-commit" placeholder="Enter target"></td>
+                        <td><input type="number" step="any" class="form-value form-control kpi-achieve" id="prev-other-achieve" placeholder="Enter achievement"></td>
+                        <td class="text-center"><span class="variance-text variance-zero" id="prev-other-variance">0</span></td>
+                        <td><input type="text" class="form-value form-control" id="prev-other-remarks" placeholder="Enter remarks"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div>
+                  <label for="prev-variance-reason" class="form-label">Reason for Variance</label>
+                  <textarea class="form-value form-control auto-expand" id="prev-variance-reason" placeholder="Explain the key reasons for variance in achievement..."></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 3: Performance Dashboard -->
+          <section id="sec-perf-dashboard" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-perf-dashboard">
+              <h3><i class="bi bi-speedometer2 text-primary"></i> 3. Performance Dashboard</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-perf-dashboard" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-4">
+                  <!-- Sales Performance -->
+                  <div class="col-md-6 col-lg-3">
+                    <div class="p-3 border rounded-3 bg-light h-100">
+                      <h5 class="border-bottom pb-2 mb-3 text-primary"><i class="bi bi-cash-stack"></i> Sales</h5>
+                      <div class="mb-2">
+                        <label for="dash-sales-target" class="form-label mb-1">Target</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-sales-target" data-metric="sales" placeholder="0">
+                      </div>
+                      <div class="mb-2">
+                        <label for="dash-sales-achieve" class="form-label mb-1">Achievement</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-sales-achieve" data-metric="sales" placeholder="0">
+                      </div>
+                      <div>
+                        <label for="dash-sales-pct" class="form-label mb-1">Percentage</label>
+                        <input type="text" class="form-value form-control form-control-sm bg-white fw-bold text-center text-primary" id="dash-sales-pct" readonly value="0.0%">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Recruitment Performance -->
+                  <div class="col-md-6 col-lg-3">
+                    <div class="p-3 border rounded-3 bg-light h-100">
+                      <h5 class="border-bottom pb-2 mb-3 text-primary"><i class="bi bi-people-fill"></i> Recruitment</h5>
+                      <div class="mb-2">
+                        <label for="dash-recruit-target" class="form-label mb-1">Target</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-recruit-target" data-metric="recruit" placeholder="0">
+                      </div>
+                      <div class="mb-2">
+                        <label for="dash-recruit-achieve" class="form-label mb-1">Achievement</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-recruit-achieve" data-metric="recruit" placeholder="0">
+                      </div>
+                      <div>
+                        <label for="dash-recruit-pct" class="form-label mb-1">Percentage</label>
+                        <input type="text" class="form-value form-control form-control-sm bg-white fw-bold text-center text-primary" id="dash-recruit-pct" readonly value="0.0%">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Collection Performance -->
+                  <div class="col-md-6 col-lg-3">
+                    <div class="p-3 border rounded-3 bg-light h-100">
+                      <h5 class="border-bottom pb-2 mb-3 text-primary"><i class="bi bi-wallet2"></i> Collection</h5>
+                      <div class="mb-2">
+                        <label for="dash-collection-target" class="form-label mb-1">Target</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-collection-target" data-metric="collection" placeholder="0">
+                      </div>
+                      <div class="mb-2">
+                        <label for="dash-collection-achieve" class="form-label mb-1">Achievement</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-collection-achieve" data-metric="collection" placeholder="0">
+                      </div>
+                      <div>
+                        <label for="dash-collection-pct" class="form-label mb-1">Percentage</label>
+                        <input type="text" class="form-value form-control form-control-sm bg-white fw-bold text-center text-primary" id="dash-collection-pct" readonly value="0.0%">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Attendance & Discipline -->
+                  <div class="col-md-6 col-lg-3">
+                    <div class="p-3 border rounded-3 bg-light h-100">
+                      <h5 class="border-bottom pb-2 mb-3 text-primary"><i class="bi bi-calendar-check-fill"></i> Attendance</h5>
+                      <div class="mb-2">
+                        <label for="dash-attend-target" class="form-label mb-1">Target Days</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-attend-target" data-metric="attend" placeholder="0">
+                      </div>
+                      <div class="mb-2">
+                        <label for="dash-attend-achieve" class="form-label mb-1">Present Days</label>
+                        <input type="number" step="any" class="form-value form-control form-control-sm dash-input" id="dash-attend-achieve" data-metric="attend" placeholder="0">
+                      </div>
+                      <div>
+                        <label for="dash-attend-pct" class="form-label mb-1">Percentage</label>
+                        <input type="text" class="form-value form-control form-control-sm bg-white fw-bold text-center text-primary" id="dash-attend-pct" readonly value="0.0%">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 4: Key Achievements -->
+          <section id="sec-key-achievements" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-key-achievements">
+              <h3><i class="bi bi-trophy text-primary"></i> 4. Key Achievements</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-key-achievements" class="collapse show">
+              <div class="card-custom-body">
+                <label for="key-achievements-text" class="form-label">List primary accomplishments during the review period</label>
+                <textarea class="form-value form-control auto-expand" id="key-achievements-text" placeholder="Detail milestones reached, records broken, project handovers, etc..."></textarea>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 5: Challenges & Bottlenecks -->
+          <section id="sec-challenges" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-challenges">
+              <h3><i class="bi bi-exclamation-triangle text-primary"></i> 5. Challenges & Bottlenecks</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-challenges" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="challenge-market" class="form-label">Market Challenges</label>
+                    <textarea class="form-value form-control auto-expand" id="challenge-market" placeholder="Competitor movements, economic conditions, policy changes..."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="challenge-customer" class="form-label">Customer Related Challenges</label>
+                    <textarea class="form-value form-control auto-expand" id="challenge-customer" placeholder="Pricing complaints, support issues, client delays..."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="challenge-internal" class="form-label">Internal Operational Challenges</label>
+                    <textarea class="form-value form-control auto-expand" id="challenge-internal" placeholder="Communication gaps, tool failures, cross-team delays..."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="challenge-resources" class="form-label">Resource Requirements</label>
+                    <textarea class="form-value form-control auto-expand" id="challenge-resources" placeholder="Additional headcount, software licenses, budget, training..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 6: Competency Review -->
+          <section id="sec-competency" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-competency">
+              <h3><i class="bi bi-star-fill text-primary"></i> 6. Competency Review</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-competency" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <div class="table-responsive">
+                      <table class="table table-custom">
+                        <thead>
+                          <tr>
+                            <th style="width: 60%">Competency</th>
+                            <th style="width: 40%">Rating (1-5)</th>
+                          </tr>
+                        </thead>
+                        <tbody id="competency-ratings-list">
+                          <tr>
+                            <td class="fw-semibold">Product Knowledge</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-product-knowledge">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Communication Skills</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-communication">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Negotiation Skills</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-negotiation">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Customer Handling</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-customer-handling">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Time Management</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-time-mgmt">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Teamwork</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-teamwork">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Leadership</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-leadership">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Problem Solving</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-problem-solving">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Reporting Accuracy</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-reporting-accuracy">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="fw-semibold">Initiative & Ownership</td>
+                            <td>
+                              <select class="form-value form-select competency-rating" id="rating-initiative">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Good</option>
+                                <option value="3" selected>3 - Satisfactory</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Unsatisfactory</option>
+                              </select>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mt-4 mt-lg-0 d-flex flex-column justify-content-center">
+                    <div class="gauge-container">
+                      <h5 class="text-secondary font-monospace mb-1">AVERAGE SCORE</h5>
+                      <span id="score-val" class="score-badge">3.0</span>
+                      <p id="score-text" class="mt-2 mb-0 fw-bold text-muted" style="font-size: 0.95rem;">Meets Expectations</p>
+                      <small id="score-details" class="text-white-50 d-block mt-1 font-monospace">Total: 30 / 50</small>
+                      
+                      <div class="gauge-bar-outer">
+                        <div id="gauge-fill" class="gauge-bar-inner" style="width: 60%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 7: Sales Activity Review -->
+          <section id="sec-sales-activity" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-sales-activity">
+              <h3><i class="bi bi-graph-up-arrow text-primary"></i> 7. Sales Activity Review</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-sales-activity" class="collapse show">
+              <div class="card-custom-body">
+                <div class="table-responsive">
+                  <table class="table table-custom">
+                    <thead>
+                      <tr>
+                        <th style="width: 40%">Activity</th>
+                        <th style="width: 30%">Target</th>
+                        <th style="width: 30%">Actual</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="fw-semibold">Prospecting Calls</td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-calls-target" placeholder="0"></td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-calls-actual" placeholder="0"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Client Meetings</td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-meetings-target" placeholder="0"></td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-meetings-actual" placeholder="0"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Presentations Conducted</td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-presentations-target" placeholder="0"></td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-presentations-actual" placeholder="0"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Follow-ups</td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-followups-target" placeholder="0"></td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-followups-actual" placeholder="0"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Closings</td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-closings-target" placeholder="0"></td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-closings-actual" placeholder="0"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Referrals Generated</td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-referrals-target" placeholder="0"></td>
+                        <td><input type="number" step="any" class="form-value form-control" id="activity-referrals-actual" placeholder="0"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 8: Training & Development Needs -->
+          <section id="sec-training" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-training">
+              <h3><i class="bi bi-mortarboard text-primary"></i> 8. Training & Development Needs</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-training" class="collapse show">
+              <div class="card-custom-body">
+                <div class="mb-4">
+                  <label class="form-label d-block mb-3">Select Focus Areas for Development</label>
+                  <div class="row g-2">
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Sales Closing" id="train-closing">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-closing">Sales Closing</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Prospecting" id="train-prospecting">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-prospecting">Prospecting</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Recruitment" id="train-recruit">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-recruit">Recruitment</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Leadership" id="train-leadership">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-leadership">Leadership</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Communication" id="train-communication">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-communication">Communication</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Customer Service" id="train-customer">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-customer">Customer Service</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Product Knowledge" id="train-product">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-product">Product Knowledge</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Time Management" id="train-time">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-time">Time Management</label>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                      <div class="form-check p-2 border rounded-3 bg-light ps-4">
+                        <input class="form-value form-check-input training-check" type="checkbox" value="Other" id="train-other">
+                        <label class="form-check-label fw-medium cursor-pointer" for="train-other">Other</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label for="training-required" class="form-label">Training Required (Specific Details)</label>
+                  <textarea class="form-value form-control auto-expand" id="training-required" placeholder="Specify course topics, software programs, certifications, or internal mentorship programs..."></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 9: Employee Feedback -->
+          <section id="sec-employee-feedback" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-employee-feedback">
+              <h3><i class="bi bi-chat-left-text text-primary"></i> 9. Employee Feedback</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-employee-feedback" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <label for="feedback-emp-well" class="form-label">What is working well?</label>
+                    <textarea class="form-value form-control auto-expand" id="feedback-emp-well" placeholder="Discuss achievements, support systems, tools, or current environment factors that help you succeed..."></textarea>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="feedback-emp-improve" class="form-label">What can the company improve?</label>
+                    <textarea class="form-value form-control auto-expand" id="feedback-emp-improve" placeholder="Suggest improvements regarding processes, company culture, tool access, internal communications, etc..."></textarea>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="feedback-emp-dept" class="form-label">Suggestions for Department Improvement</label>
+                    <textarea class="form-value form-control auto-expand" id="feedback-emp-dept" placeholder="Provide concrete ideas to improve workflow, efficiency, and collaboration inside your immediate department..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 10: Manager Feedback -->
+          <section id="sec-manager-feedback" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-manager-feedback">
+              <h3><i class="bi bi-chat-right-quote text-primary"></i> 10. Manager Feedback</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-manager-feedback" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <label for="feedback-mgr-strengths" class="form-label">Key Strengths</label>
+                    <textarea class="form-value form-control auto-expand" id="feedback-mgr-strengths" placeholder="Highlight core competencies, behavior patterns, or contributions where the employee excels..."></textarea>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="feedback-mgr-improvements" class="form-label">Areas for Improvement</label>
+                    <textarea class="form-value form-control auto-expand" id="feedback-mgr-improvements" placeholder="Identify skill gaps, performance challenges, behaviors, or targets needing adjustments..."></textarea>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="feedback-mgr-actions" class="form-label">Immediate Corrective Actions</label>
+                    <textarea class="form-value form-control auto-expand" id="feedback-mgr-actions" placeholder="List key steps, milestones, and timelines for immediate improvement..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 11: Career Development Discussion -->
+          <section id="sec-career-development" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-career-development">
+              <h3><i class="bi bi-compass text-primary"></i> 11. Career Development Discussion</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-career-development" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <label for="career-goal-1yr" class="form-label">Career Goal (1 Year)</label>
+                    <textarea class="form-value form-control auto-expand" id="career-goal-1yr" placeholder="Immediate promotion, specific target acquisitions, skill building goals..."></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="career-goal-3yr" class="form-label">Career Goal (3 Years)</label>
+                    <textarea class="form-value form-control auto-expand" id="career-goal-3yr" placeholder="Leadership aspirations, transition to new verticals, major account handling..."></textarea>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="form-label d-block mb-3">Promotion Readiness</label>
+                  <div class="row g-2">
+                    <div class="col-md-4">
+                      <input type="radio" class="form-value btn-check" name="promo-readiness" id="promo-ready" value="Ready">
+                      <label class="btn btn-outline-custom" for="promo-ready">
+                        <i class="bi bi-check-circle-fill me-1"></i> Ready
+                      </label>
+                    </div>
+                    <div class="col-md-4">
+                      <input type="radio" class="form-value btn-check" name="promo-readiness" id="promo-dev" value="Need Development">
+                      <label class="btn btn-outline-custom" for="promo-dev">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Need Development
+                      </label>
+                    </div>
+                    <div class="col-md-4">
+                      <input type="radio" class="form-value btn-check" name="promo-readiness" id="promo-not-yet" value="Not Yet Ready">
+                      <label class="btn btn-outline-custom" for="promo-not-yet">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Not Yet Ready
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 12: Next Month Commitment -->
+          <section id="sec-next-commitments" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-next-commitments">
+              <h3><i class="bi bi-calendar-check text-primary"></i> 12. Next Month Commitment</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-next-commitments" class="collapse show">
+              <div class="card-custom-body">
+                <div class="table-responsive">
+                  <table class="table table-custom">
+                    <thead>
+                      <tr>
+                        <th style="width: 30%">KPI</th>
+                        <th style="width: 70%">Commitment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="fw-semibold">Sales</td>
+                        <td><input type="text" class="form-value form-control" id="next-sales-commit" placeholder="Define sales goal for next month"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Recruitment</td>
+                        <td><input type="text" class="form-value form-control" id="next-recruit-commit" placeholder="Define recruitment goal for next month"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Collections</td>
+                        <td><input type="text" class="form-value form-control" id="next-collection-commit" placeholder="Define collections target for next month"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Customer Visits</td>
+                        <td><input type="text" class="form-value form-control" id="next-visits-commit" placeholder="Define planned visits for next month"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Team Development</td>
+                        <td><input type="text" class="form-value form-control" id="next-team-commit" placeholder="Define training/mentorship commits"></td>
+                      </tr>
+                      <tr>
+                        <td class="fw-semibold">Other</td>
+                        <td><input type="text" class="form-value form-control" id="next-other-commit" placeholder="Define any other commitments"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 13: Accountability Section -->
+          <section id="sec-accountability" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-accountability">
+              <h3><i class="bi bi-shield-check text-primary"></i> 13. Accountability Section</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-accountability" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <label for="acc-prevented" class="form-label">What prevented you from achieving 100% performance?</label>
+                    <textarea class="form-value form-control auto-expand" id="acc-prevented" placeholder="Detail any internal dependencies, delays, market conditions, or other barriers..."></textarea>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="acc-personal-actions" class="form-label">What actions will you personally take to improve next month?</label>
+                    <textarea class="form-value form-control auto-expand" id="acc-personal-actions" placeholder="Steps regarding work ethic, skill development, planning, and organization..."></textarea>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="acc-mgt-support" class="form-label">What support do you require from management?</label>
+                    <textarea class="form-value form-control auto-expand" id="acc-mgt-support" placeholder="Coaching sessions, equipment upgrades, resolving inter-department blockers..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 14: Management Decision -->
+          <section id="sec-mgmt-decision" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-mgmt-decision">
+              <h3><i class="bi bi-folder-check text-primary"></i> 14. Management Decision</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-mgmt-decision" class="collapse show">
+              <div class="card-custom-body">
+                <div class="row g-3">
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-outstanding" value="Outstanding Performer">
+                    <label class="btn btn-outline-custom" for="dec-outstanding">Outstanding Performer</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-exceeds" value="Exceeds Expectations">
+                    <label class="btn btn-outline-custom" for="dec-exceeds">Exceeds Expectations</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-meets" value="Meets Expectations">
+                    <label class="btn btn-outline-custom" for="dec-meets">Meets Expectations</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-needs-imp" value="Needs Improvement">
+                    <label class="btn btn-outline-custom" for="dec-needs-imp">Needs Improvement</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-pip" value="Performance Improvement Plan (PIP)">
+                    <label class="btn btn-outline-custom" for="dec-pip">Performance Improvement Plan (PIP)</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-promo" value="Promotion Recommended">
+                    <label class="btn btn-outline-custom" for="dec-promo">Promotion Recommended</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-increment" value="Salary Increment Recommended">
+                    <label class="btn btn-outline-custom" for="dec-increment">Salary Increment Recommended</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-warning" value="Warning Required">
+                    <label class="btn btn-outline-custom" for="dec-warning">Warning Required</label>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <input type="radio" class="form-value btn-check" name="mgmt-decision" id="dec-review" value="Further Review Required">
+                    <label class="btn btn-outline-custom" for="dec-review">Further Review Required</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 15: Agreed Action Plan -->
+          <section id="sec-action-plan" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-action-plan">
+              <h3><i class="bi bi-list-task text-primary"></i> 15. Agreed Action Plan</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-action-plan" class="collapse show">
+              <div class="card-custom-body">
+                <div class="table-responsive mb-3">
+                  <table class="table table-custom">
+                    <thead>
+                      <tr>
+                        <th style="width: 50%">Action Item</th>
+                        <th style="width: 25%">Responsible Person</th>
+                        <th style="width: 20%">Deadline</th>
+                        <th style="width: 5%" class="btn-remove-row text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="action-plan-table-body">
+                      <!-- Dynamic rows will be inserted here -->
+                    </tbody>
+                  </table>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-add-row" onclick="addActionPlanRow('', '', '')">
+                  <i class="bi bi-plus-circle me-1"></i> Add Action Item
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 16: Final Commitment Statement -->
+          <section id="sec-signatures" class="card-custom">
+            <div class="card-custom-header" data-bs-toggle="collapse" data-bs-target="#collapse-signatures">
+              <h3><i class="bi bi-pencil-square text-primary"></i> 16. Final Commitment Statement</h3>
+              <div>
+                <span class="badge-collapsed">Collapsed</span>
+                <i class="bi bi-chevron-down toggle-icon"></i>
+              </div>
+            </div>
+            <div id="collapse-signatures" class="collapse show">
+              <div class="card-custom-body">
+                <p class="text-muted mb-4 small" style="text-align: justify;">
+                  We, the undersigned, agree that this review is an accurate summary of performance over the specified review period, and that the commitments and action plans laid out herein represent our aligned focus areas for the upcoming month.
+                </p>
+                
+                <div class="row signature-row pt-4 g-4">
+                  <div class="col-md-4">
+                    <div class="signature-box mx-auto" style="max-width: 220px;">
+                      Employee Signature
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="signature-box mx-auto" style="max-width: 220px;">
+                      Reporting Manager Signature
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="signature-box mx-auto" style="max-width: 220px;">
+                      HR Representative Signature
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </form>
+
+      <!-- Bottom Floating Action Controls Panel -->
+      <div id="action-panel">
+        <button type="button" class="btn btn-outline-danger me-auto btn-utility" onclick="confirmResetForm()">
+          <i class="bi bi-trash-fill"></i> Clear Form
+        </button>
+        <span class="text-muted small me-2 d-none d-sm-inline-block"><i class="bi bi-cloud-check-fill text-success"></i> Auto-saved locally</span>
+        <button type="submit" form="review-form" class="btn btn-success px-4 font-monospace fw-bold" onclick="handlePDFGenerate(event)">
+          <i class="bi bi-file-pdf-fill fs-5 me-1"></i> GENERATE PDF REPORT
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div class="modal fade" id="resetConfirmModal" tabindex="-1" aria-labelledby="resetModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="resetModalLabel">Reset Form Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to clear all data on this performance review form? This action cannot be undone.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" onclick="resetForm()">Clear All Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functionality -->
+  <script>
+    const STORAGE_KEY = 'serendib_perf_review_data';
+
+    // List of competency rating descriptions and thresholds
+    const getCompetencyRatingDetails = (avg) => {
+      if (avg >= 4.5) return { text: 'Outstanding Performer', badgeClass: 'outstanding', percent: (avg / 5) * 100 };
+      if (avg >= 3.5) return { text: 'Exceeds Expectations', badgeClass: 'exceeds', percent: (avg / 5) * 100 };
+      if (avg >= 2.5) return { text: 'Meets Expectations', badgeClass: 'meets', percent: (avg / 5) * 100 };
+      return { text: 'Needs Improvement', badgeClass: 'needs-imp', percent: (avg / 5) * 100 };
+    };
+
+    // Calculate Variance (Previous Commitments Table)
+    const updateVariance = (row) => {
+      const commitInput = row.querySelector('.kpi-commit');
+      const achieveInput = row.querySelector('.kpi-achieve');
+      const varianceBadge = row.querySelector('.variance-text');
+      
+      const commit = parseFloat(commitInput.value);
+      const achieve = parseFloat(achieveInput.value);
+
+      if (isNaN(commit) || isNaN(achieve)) {
+        varianceBadge.innerText = '0';
+        varianceBadge.className = 'variance-text variance-zero';
+        return;
+      }
+
+      const val = achieve - commit;
+      const formattedVal = val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1);
+      
+      varianceBadge.innerText = formattedVal;
+      
+      if (val > 0) {
+        varianceBadge.className = 'variance-text variance-pos';
+      } else if (val < 0) {
+        varianceBadge.className = 'variance-text variance-neg';
+      } else {
+        varianceBadge.className = 'variance-text variance-zero';
+      }
+    };
+
+    // Calculate Dashboard Percentages
+    const updateDashboardPct = (metric) => {
+      const targetVal = parseFloat(document.getElementById(`dash-${metric}-target`).value) || 0;
+      const achieveVal = parseFloat(document.getElementById(`dash-${metric}-achieve`).value) || 0;
+      const pctOutput = document.getElementById(`dash-${metric}-pct`);
+      
+      let pct = 0;
+      if (targetVal > 0) {
+        pct = (achieveVal / targetVal) * 100;
+      }
+      pctOutput.value = pct.toFixed(1) + '%';
+    };
+
+    // Calculate Competency Scores
+    const updateCompetencyScores = () => {
+      const ratings = document.querySelectorAll('.competency-rating');
+      let total = 0;
+      let count = ratings.length;
+
+      ratings.forEach(sel => {
+        total += parseInt(sel.value) || 3;
+      });
+
+      const avg = total / count;
+      const details = getCompetencyRatingDetails(avg);
+
+      const scoreVal = document.getElementById('score-val');
+      const scoreText = document.getElementById('score-text');
+      const scoreDetails = document.getElementById('score-details');
+      const gaugeFill = document.getElementById('gauge-fill');
+
+      scoreVal.innerText = avg.toFixed(2);
+      scoreVal.className = `score-badge ${details.badgeClass}`;
+      scoreText.innerText = details.text;
+      scoreDetails.innerText = `Total: ${total} / ${count * 5}`;
+      gaugeFill.style.width = `${details.percent}%`;
+    };
+
+    // Dynamic Action Plan Table Management
+    const addActionPlanRow = (action = '', responsible = '', deadline = '') => {
+      const tableBody = document.getElementById('action-plan-table-body');
+      const rowId = 'action-row-' + Date.now() + Math.random().toString(36).substr(2, 5);
+      
+      const tr = document.createElement('tr');
+      tr.id = rowId;
+      tr.className = 'action-plan-row';
+      tr.innerHTML = `
+        <td><input type="text" class="form-value form-control form-control-sm row-action" value="${action}" required placeholder="e.g., Conduct client follow-up sequence"></td>
+        <td><input type="text" class="form-value form-control form-control-sm row-resp" value="${responsible}" required placeholder="e.g., John Doe"></td>
+        <td><input type="date" class="form-value form-control form-control-sm row-deadline" value="${deadline}" required></td>
+        <td class="btn-remove-row text-center">
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeActionPlanRow('${rowId}')">
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        </td>
+      `;
+      tableBody.appendChild(tr);
+      
+      // Bind input events to new row for auto-saving
+      tr.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', saveToLocalStorage);
+      });
+      saveToLocalStorage();
+    };
+
+    const removeActionPlanRow = (rowId) => {
+      const row = document.getElementById(rowId);
+      if (row) {
+        row.remove();
+        saveToLocalStorage();
+      }
+    };
+
+    // Initialize all collapsible states
+    const toggleAllCards = (expand) => {
+      const collapses = document.querySelectorAll('.collapse');
+      collapses.forEach(el => {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(el, { toggle: false });
+        if (expand) {
+          bsCollapse.show();
+        } else {
+          bsCollapse.hide();
+        }
+      });
+    };
+
+    // LocalStorage State Caching (Auto-Save)
+    const getFormDataObject = () => {
+      const data = {
+        simpleFields: {},
+        checkboxes: {},
+        radios: {},
+        actionPlan: []
+      };
+
+      // Gather simple text inputs, select values, number inputs, textareas
+      document.querySelectorAll('.form-value').forEach(el => {
+        if (el.classList.contains('training-check')) {
+          data.checkboxes[el.id] = el.checked;
+        } else if (el.type === 'radio') {
+          if (el.checked) {
+            data.radios[el.name] = el.value;
+          }
+        } else {
+          data.simpleFields[el.id] = el.value;
+        }
+      });
+
+      // Gather dynamic action plan rows
+      document.querySelectorAll('.action-plan-row').forEach(row => {
+        data.actionPlan.push({
+          action: row.querySelector('.row-action').value,
+          responsible: row.querySelector('.row-resp').value,
+          deadline: row.querySelector('.row-deadline').value
+        });
+      });
+
+      return data;
+    };
+
+    const saveToLocalStorage = () => {
+      const data = getFormDataObject();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showToastNotification();
+    };
+
+    let toastTimeout;
+    const showToastNotification = () => {
+      const toast = document.getElementById('save-toast');
+      if (!toast) return;
+      
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    };
+
+    const loadFromLocalStorage = () => {
+      const rawData = localStorage.getItem(STORAGE_KEY);
+      if (!rawData) {
+        // Seed some empty dynamic rows if no cache exists
+        addActionPlanRow('', '', '');
+        return;
+      }
+
+      try {
+        const data = JSON.parse(rawData);
+
+        // Populate simple fields
+        Object.entries(data.simpleFields || {}).forEach(([id, val]) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.value = val;
+            
+            // Re-trigger expansion for loaded textareas
+            if (el.tagName === 'TEXTAREA') {
+              autoExpandTextarea(el);
+            }
+          }
+        });
+
+        // Populate checkboxes
+        Object.entries(data.checkboxes || {}).forEach(([id, val]) => {
+          const el = document.getElementById(id);
+          if (el) el.checked = val;
+        });
+
+        // Populate radio buttons
+        Object.entries(data.radios || {}).forEach(([name, val]) => {
+          const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+          if (el) el.checked = true;
+        });
+
+        // Populate Action Plan Rows
+        const tableBody = document.getElementById('action-plan-table-body');
+        tableBody.innerHTML = '';
+        if (data.actionPlan && data.actionPlan.length > 0) {
+          data.actionPlan.forEach(row => {
+            addActionPlanRow(row.action, row.responsible, row.deadline);
+          });
+        } else {
+          addActionPlanRow('', '', '');
+        }
+
+        // Re-execute calculations
+        document.querySelectorAll('#prev-commitments-table tr').forEach(updateVariance);
+        ['sales', 'recruit', 'collection', 'attend'].forEach(updateDashboardPct);
+        updateCompetencyScores();
+
+      } catch (err) {
+        console.error("Error loading cached form data", err);
+      }
+    };
+
+    // Reset Form Operations
+    const confirmResetForm = () => {
+      const modal = new bootstrap.Modal(document.getElementById('resetConfirmModal'));
+      modal.show();
+    };
+
+    const resetForm = () => {
+      localStorage.removeItem(STORAGE_KEY);
+      document.getElementById('review-form').reset();
+      
+      // Clear all action plan rows and add one empty row
+      document.getElementById('action-plan-table-body').innerHTML = '';
+      addActionPlanRow('', '', '');
+
+      // Recalculate competency scores and variance values
+      document.querySelectorAll('#prev-commitments-table tr').forEach(updateVariance);
+      ['sales', 'recruit', 'collection', 'attend'].forEach(updateDashboardPct);
+      updateCompetencyScores();
+
+      // Dismiss modal
+      const modalEl = document.getElementById('resetConfirmModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+    };
+
+    // Textarea Auto-expand
+    const autoExpandTextarea = (textarea) => {
+      textarea.style.height = 'auto';
+      textarea.style.height = (textarea.scrollHeight + 4) + 'px';
+    };
+
+    // Prepare textareas for export to ensure full text is visible inside canvas capturing
+    const prepareTextareasForPDF = () => {
+      document.querySelectorAll('textarea').forEach(ta => {
+        // Height needs to be expanded completely to fit scroll height
+        ta.style.height = 'auto';
+        ta.style.height = (ta.scrollHeight + 10) + 'px';
+      });
+    };
+
+    // PDF Generation Handler
+    const handlePDFGenerate = (event) => {
+      event.preventDefault();
+
+      const form = document.getElementById('review-form');
+      if (!form.checkValidity()) {
+        event.stopPropagation();
+        form.classList.add('was-validated');
+        
+        // Find first invalid input and focus/scroll to it
+        const firstInvalid = form.querySelector(':invalid');
+        if (firstInvalid) {
+          const section = firstInvalid.closest('section');
+          if (section) {
+            const collapseEl = section.querySelector('.collapse');
+            if (collapseEl && !collapseEl.classList.contains('show')) {
+              const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl);
+              bsCollapse.show();
+            }
+          }
+          firstInvalid.focus();
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      const empName = document.getElementById('emp-name').value || 'Employee';
+      const safeEmpName = empName.trim().replace(/[^a-zA-Z0-9]/g, '_');
+      const filename = `Performance_Review_${safeEmpName}.pdf`;
+
+      // Expand all sections so everything shows up in PDF
+      toggleAllCards(true);
+      prepareTextareasForPDF();
+
+      // Enable a short delay to allow transition animations to complete
+      setTimeout(() => {
+        document.body.classList.add('pdf-exporting');
+        
+        const element = document.getElementById('review-form-container');
+        const opt = {
+          margin:       [10, 10, 10, 10], // 10mm margins
+          filename:     filename,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { 
+            scale: 2, 
+            useCORS: true,
+            logging: false,
+            letterRendering: true
+          },
+          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak:    { 
+            mode: ['css', 'legacy'],
+            avoid: ['.card-custom', 'tr', '.signature-row']
+          }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+          document.body.classList.remove('pdf-exporting');
+          // Reset textareas height to auto (or default rows)
+          document.querySelectorAll('textarea').forEach(ta => {
+            ta.style.height = 'auto';
+            autoExpandTextarea(ta);
+          });
+        }).catch(err => {
+          console.error("PDF generation failed:", err);
+          document.body.classList.remove('pdf-exporting');
+        });
+      }, 500);
+    };
+
+    // Event Listeners initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Setup save notification toast in DOM
+      const toastDiv = document.createElement('div');
+      toastDiv.id = 'save-toast';
+      toastDiv.innerHTML = `<i class="bi bi-cloud-arrow-up-fill text-success fs-5"></i><span>Progress saved locally</span>`;
+      document.body.appendChild(toastDiv);
+
+      // 2. Load cached values
+      loadFromLocalStorage();
+
+      // 3. Register auto-expand for textareas
+      document.querySelectorAll('textarea.auto-expand').forEach(ta => {
+        autoExpandTextarea(ta);
+        ta.addEventListener('input', () => {
+          autoExpandTextarea(ta);
+        });
+      });
+
+      // 4. Register event listener for competency select modifications
+      document.querySelectorAll('.competency-rating').forEach(select => {
+        select.addEventListener('change', () => {
+          updateCompetencyScores();
+          saveToLocalStorage();
+        });
+      });
+
+      // 5. Register event listeners for variance updates (Previous Commitments)
+      document.querySelectorAll('#prev-commitments-table tr').forEach(row => {
+        row.querySelectorAll('.kpi-commit, .kpi-achieve').forEach(input => {
+          input.addEventListener('input', () => {
+            updateVariance(row);
+            saveToLocalStorage();
+          });
+        });
+      });
+
+      // 6. Register dashboard calculation listeners
+      document.querySelectorAll('.dash-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const metric = e.target.getAttribute('data-metric');
+          updateDashboardPct(metric);
+          saveToLocalStorage();
+        });
+      });
+
+      // 7. General change listener for simple forms
+      document.querySelectorAll('.form-value').forEach(input => {
+        input.addEventListener('change', saveToLocalStorage);
+        if (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') {
+          input.addEventListener('input', saveToLocalStorage);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
