@@ -604,12 +604,99 @@
         justify-content: space-between;
         align-items: center;
       }
+    }
+
+    @media (max-width: 767.98px) {
+      #main-content {
+        padding: 1rem;
+      }
       #action-panel {
-        bottom: 1rem;
-        left: 1rem;
-        right: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        padding: 0.75rem 1rem;
+        margin-top: 0;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+      }
+      #action-panel .btn-utility {
+        padding: 0.625rem;
+      }
+      #action-panel .btn-utility span {
+        display: none; /* Hide text, just show icon */
+      }
+      #action-panel .btn-success {
+        flex-grow: 1;
+      }
+      body {
+        padding-bottom: 80px !important;
+      }
+
+      /* Stack dynamic action plan table cells on mobile */
+      .table-responsive-stack thead {
+        display: none;
+      }
+      .table-responsive-stack tr {
+        display: block;
+        border: 1.5px solid var(--serendib-gray-border);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background-color: #ffffff;
+      }
+      .table-responsive-stack td {
+        display: block;
+        width: 100% !important;
+        text-align: left;
+        border-bottom: none;
+        padding: 0.35rem 0.5rem;
+      }
+      .table-responsive-stack td.btn-remove-row {
+        text-align: right;
+        border-top: 1px solid var(--serendib-gray-border);
+        padding-top: 0.5rem;
+        margin-top: 0.25rem;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .corporate-banner {
+        padding: 1.25rem !important;
+      }
+      .corporate-banner h1 {
+        font-size: 1.5rem !important;
+      }
+      .corporate-banner p {
+        font-size: 0.75rem !important;
+      }
+      .corporate-banner svg {
+        width: 100px !important;
+      }
+      .card-custom-body {
+        padding: 1rem !important;
+      }
+      .card-custom-header {
+        padding: 0.85rem 1rem !important;
+      }
+      .card-custom-header h3 {
+        font-size: 1rem !important;
+      }
+      .form-control, .form-select {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+      }
+      .table-custom td, .table-custom th {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.85rem !important;
+      }
+      .btn-outline-custom {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.825rem;
       }
     }
   </style>
@@ -1054,7 +1141,7 @@
             <div id="collapse-competency" class="collapse show">
               <div class="card-custom-body">
                 <div class="row">
-                  <div class="col-lg-8">
+                  <div class="col-lg-8 order-2 order-lg-1">
                     <div class="table-responsive">
                       <table class="table table-custom">
                         <thead>
@@ -1188,7 +1275,7 @@
                       </table>
                     </div>
                   </div>
-                  <div class="col-lg-4 mt-4 mt-lg-0 d-flex flex-column justify-content-center">
+                  <div class="col-lg-4 order-1 order-lg-2 mb-4 mb-lg-0 d-flex flex-column justify-content-center">
                     <div class="gauge-container">
                       <h5 class="text-secondary font-monospace mb-1">AVERAGE SCORE</h5>
                       <span id="score-val" class="score-badge">3.0</span>
@@ -1593,7 +1680,7 @@
             <div id="collapse-action-plan" class="collapse show">
               <div class="card-custom-body">
                 <div class="table-responsive mb-3">
-                  <table class="table table-custom">
+                  <table class="table table-custom table-responsive-stack">
                     <thead>
                       <tr>
                         <th style="width: 50%">Action Item</th>
